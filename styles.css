@@ -55,3 +55,12 @@ footer {
   height: 100%;
   width: 100%;
 }
+
+.button .my-button {
+  background-color: #000;
+  color: #ffffff;
+  border: white solid;
+  border-width: 1px;
+  padding: 5px;
+  border-radius: 5px;
+}

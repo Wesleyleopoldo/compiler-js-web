@@ -19,14 +19,31 @@ iframe.srcdoc = `
           const send = (type, message) => parent.postMessage({type, message}, '*');
           console.log = (...args) => send('log', args.join(' '));
           console.error = (...args) => send('error', args.join(' '));
+
+          let promptResolve;
+
+          window.prompt = (message) => {
+            send("prompt-request", message);
+            return new Promise((resolve) => {
+              promptResolve = resolve;
+            });  
+          };
           
           window.addEventListener('message', (e) => {
-            if (!e.data || e.data.type !== 'run') return;
-            try {
+            if (!e.data) return;
+            
+            if(e.data.type === "prompt-response" && promptResolve) {
+              promptResolve(e.data.value);
+              promptResolve = null;
+            }
+              
+            if(e.data.type === "run") {
+              try {
                 new Function(e.data.code)();
                 send('done', 'Execução finalizada');
-            } catch(error) {
-                send('error', error.message);
+              } catch(error) {
+                  send('error', error.message);
+              }
             }
           });
         </script>

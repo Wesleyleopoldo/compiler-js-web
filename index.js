@@ -29,7 +29,7 @@ iframe.srcdoc = `
                 send('error', error.message);
             }
           });
-        </script>s
+        </script>
       </body>
     </html>
   "
